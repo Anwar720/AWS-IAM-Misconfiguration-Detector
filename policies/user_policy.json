@@ -2,7 +2,7 @@
   "attached_group_policies": [],
   "attached_user_policies": [
     {
-      "arn": "arn:aws:iam::767124094905:policy/EscalationDemoPolicy",
+      "arn": "arn:aws:iam::userid:policy/EscalationDemoPolicy",
       "document": {
         "Statement": [
           {
@@ -45,5 +45,5 @@
       "name": "IAMReadOnlyForDemo"
     }
   ],
-  "user": "Anwar"
+  "user": ""
 }
