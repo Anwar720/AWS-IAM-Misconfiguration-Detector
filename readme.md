@@ -14,7 +14,7 @@
 Clone the repository and build the project:
 
 ```bash
-  git clone https://github.com/your-username/iam-misconfiguration-detector.git
+  git clone https://github.com/Anwar720/AWS-IAM-Misconfiguration-Detector.git
 
   cd iam-misconfiguration-detector
   cargo build --release
