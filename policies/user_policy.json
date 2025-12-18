@@ -1,0 +1,49 @@
+{
+  "attached_group_policies": [],
+  "attached_user_policies": [
+    {
+      "arn": "arn:aws:iam::767124094905:policy/EscalationDemoPolicy",
+      "document": {
+        "Statement": [
+          {
+            "Action": [
+              "iam:CreatePolicy",
+              "iam:CreatePolicyVersion",
+              "iam:PutUserPolicy",
+              "iam:AttachUserPolicy",
+              "iam:CreateAccessKey",
+              "iam:ListPolicies",
+              "iam:ListUsers",
+              "iam:GetPolicy",
+              "iam:GetPolicyVersion"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+          }
+        ],
+        "Version": "2012-10-17"
+      },
+      "name": "EscalationDemoPolicy"
+    }
+  ],
+  "inline_group_policies": [],
+  "inline_user_policies": [
+    {
+      "document": {
+        "Statement": [
+          {
+            "Action": [
+              "iam:Get*",
+              "iam:List*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+          }
+        ],
+        "Version": "2012-10-17"
+      },
+      "name": "IAMReadOnlyForDemo"
+    }
+  ],
+  "user": "Anwar"
+}

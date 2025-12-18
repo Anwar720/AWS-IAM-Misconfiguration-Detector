@@ -1,0 +1,210 @@
+[
+  {
+    "id": "IAM-001",
+    "description": "Policy allows all actions or resources using wildcard (*)",
+    "detection": ["Action:*", "Resource:*"],
+    "severity": 10,
+    "impact": "Principal has unrestricted access to all AWS services and resources",
+    "remediation": "Replace wildcards with least-privilege actions and resources; add conditions"
+  },
+  {
+    "id": "IAM-002",
+    "description": "User or role can create or attach IAM policies",
+    "detection": ["iam:CreatePolicy", "iam:AttachRolePolicy", "iam:PutRolePolicy", "iam:PutUserPolicy"],
+    "severity": 10,
+    "impact": "Principal can escalate privileges by creating or attaching new policies",
+    "remediation": "Restrict these actions to admin roles; use change control or permission boundaries"
+  },
+  {
+    "id": "IAM-003",
+    "description": "User can create access keys or modify another user's password",
+    "detection": ["iam:CreateAccessKey", "iam:UpdateLoginProfile", "iam:CreateLoginProfile"],
+    "severity": 9,
+    "impact": "Attacker can create long-lived credentials or compromise another account",
+    "remediation": "Limit to trusted administrators; enforce MFA for all users"
+  },
+  {
+    "id": "IAM-004",
+    "description": "iam:PassRole combined with compute service creation permissions",
+    "detection": ["iam:PassRole", "ec2:RunInstances", "lambda:CreateFunction", "ecs:RunTask"],
+    "severity": 10,
+    "impact": "Attacker can launch compute resources with elevated roles",
+    "remediation": "Scope PassRole to specific roles and require conditions like aws:RequestTag"
+  },
+  {
+    "id": "IAM-005",
+    "description": "Broad or wildcard sts:AssumeRole trust policy",
+    "detection": ["sts:AssumeRole", "Principal:*"],
+    "severity": 10,
+    "impact": "Unauthorized entities can assume high-privileged roles",
+    "remediation": "Limit trust policies to specific principals; enforce MFA and conditions"
+  },
+  {
+    "id": "IAM-006",
+    "description": "Lambda functions can be updated or modified by unauthorized users",
+    "detection": ["lambda:UpdateFunctionCode", "lambda:UpdateFunctionConfiguration"],
+    "severity": 9,
+    "impact": "Malicious actor can inject code into existing functions",
+    "remediation": "Restrict update actions to CI/CD roles; enable code signing"
+  },
+  {
+    "id": "IAM-007",
+    "description": "KMS decryption or grant creation permissions exposed",
+    "detection": ["kms:Decrypt", "kms:CreateGrant", "kms:GenerateDataKey*"],
+    "severity": 9,
+    "impact": "Sensitive data could be decrypted or encryption keys abused",
+    "remediation": "Restrict key policies and enforce key usage conditions"
+  },
+  {
+    "id": "IAM-008",
+    "description": "S3 bucket ACL or policy modification allowed",
+    "detection": ["s3:PutBucketPolicy", "s3:PutBucketAcl", "s3:PutObjectAcl"],
+    "severity": 8,
+    "impact": "Bucket access can be made public or delegated improperly",
+    "remediation": "Restrict these actions; enable S3 Block Public Access"
+  },
+  {
+    "id": "IAM-009",
+    "description": "S3 object or bucket read access on all resources",
+    "detection": ["s3:GetObject", "s3:GetBucketPolicy"],
+    "severity": 8,
+    "impact": "Data exposure through unrestricted read access",
+    "remediation": "Scope access to specific buckets and paths; use logging"
+  },
+  {
+    "id": "IAM-010",
+    "description": "CloudTrail or CloudWatch logging can be deleted or stopped",
+    "detection": ["cloudtrail:DeleteTrail", "cloudtrail:StopLogging", "logs:DeleteLogGroup"],
+    "severity": 8,
+    "impact": "Attacker can erase activity logs to hide malicious actions",
+    "remediation": "Restrict log modification; store logs in immutable accounts"
+  },
+  {
+    "id": "IAM-011",
+    "description": "Role creation combined with PassRole permission",
+    "detection": ["iam:CreateRole", "iam:PassRole"],
+    "severity": 8,
+    "impact": "Attacker can create privileged roles and assume them",
+    "remediation": "Apply permission boundaries and require approvals"
+  },
+  {
+    "id": "IAM-012",
+    "description": "EC2 instance can assume arbitrary roles",
+    "detection": ["ec2:AssociateIamInstanceProfile", "ec2:RunInstances", "iam:PassRole"],
+    "severity": 8,
+    "impact": "Compute instances can assume high-privileged IAM roles",
+    "remediation": "Restrict RunInstances and scope PassRole permissions"
+  },
+  {
+    "id": "IAM-013",
+    "description": "Broad IAM read permissions (List*/Get*) granted",
+    "detection": ["iam:List*", "iam:Get*"],
+    "severity": 5,
+    "impact": "Facilitates reconnaissance for privilege escalation",
+    "remediation": "Limit read access to necessary principals only"
+  },
+  {
+    "id": "IAM-014",
+    "description": "Unrestricted STS federation or web identity token creation",
+    "detection": ["sts:GetFederationToken", "sts:AssumeRoleWithWebIdentity"],
+    "severity": 6,
+    "impact": "Temporary credentials can be created without proper controls",
+    "remediation": "Add strict conditions and lifetime limits"
+  },
+  {
+    "id": "IAM-015",
+    "description": "Create or modify database or managed service instances",
+    "detection": ["rds:CreateDBInstance", "es:CreateElasticsearchDomain", "dynamodb:CreateTable"],
+    "severity": 6,
+    "impact": "User can deploy resources to run unauthorized workloads",
+    "remediation": "Restrict service creation to approved accounts"
+  },
+  {
+    "id": "IAM-016",
+    "description": "IAM policy simulation permissions granted",
+    "detection": ["iam:SimulatePrincipalPolicy", "iam:SimulateCustomPolicy"],
+    "severity": 3,
+    "impact": "Used for reconnaissance to map available permissions",
+    "remediation": "Restrict to security audit roles only"
+  },
+  {
+    "id": "IAM-017",
+    "description": "Overly broad Describe/List permissions on resources",
+    "detection": ["Describe*", "List*"],
+    "severity": 3,
+    "impact": "Information disclosure aiding future attacks",
+    "remediation": "Tighten permissions to least privilege"
+  },
+  {
+    "id": "POLICY-018",
+    "description": "S3 bucket policy allows public access (Principal: *)",
+    "detection": ["Principal:*", "s3:GetObject"],
+    "severity": 9,
+    "impact": "Public exposure of S3 data",
+    "remediation": "Enable S3 Block Public Access and restrict bucket policy"
+  },
+  {
+    "id": "POLICY-019",
+    "description": "Lambda resource policy allows cross-account or public invoke",
+    "detection": ["lambda:InvokeFunction", "Principal:*"],
+    "severity": 8,
+    "impact": "External actors can invoke Lambda functions",
+    "remediation": "Limit principals in Lambda resource policies"
+  },
+  {
+    "id": "POLICY-020",
+    "description": "SQS or SNS topic policies allow broad access",
+    "detection": ["Principal:*", "sqs:SendMessage", "sns:Publish"],
+    "severity": 7,
+    "impact": "Cross-account abuse or message injection possible",
+    "remediation": "Restrict principals and require encryption at rest"
+  },
+  {
+    "id": "IAM-021",
+    "description": "Full IAM administrative actions (iam:*) detected in managed policy",
+    "detection": ["iam:*", "iam:CreateRole", "iam:AttachRolePolicy", "iam:PutUserPolicy", "iam:AttachUserPolicy"],
+    "severity": 10,
+    "impact": "Full IAM control - ability to create/modify policies, roles, and credentials, enabling immediate privilege escalation.",
+    "remediation": "Restrict iam:*; apply least-privilege and permission boundaries. Move admin functions into dedicated admin roles with MFA and approval workflows."
+  },
+  {
+    "id": "IAM-022",
+    "description": "AdministratorAccess style wildcard policy (Action: *)",
+    "detection": ["Action:*", "\"Action\": \"*\""],
+    "severity": 10,
+    "impact": "Wildcard admin gives full access to account resources.",
+    "remediation": "Remove wildcard policies; replace with least privilege; use roles for admin tasks and require MFA/approval."
+  },
+  {
+    "id": "SSM-001",
+    "description": "SSM StartSession / SendCommand allowed on instances (Session Manager access)",
+    "detection": ["ssm:StartSession", "ssm:SendCommand", "ssm:ResumeSession", "ssmmessages:OpenDataChannel"],
+    "severity": 9,
+    "impact": "Can open an interactive session or push commands to EC2/managed instances. If instance roles or keys exist, can pivot to instance privileges or retrieve secrets.",
+    "remediation": "Scope SSM actions to only required principals and targets; require approval for session initiation; log and alert on session creation."
+  },
+  {
+    "id": "KMS-001",
+    "description": "KMS CreateGrant or GenerateDataKey allowed (potential key abuse)",
+    "detection": ["kms:CreateGrant", "kms:GenerateDataKey", "kms:GenerateDataKey*"],
+    "severity": 9,
+    "impact": "CreateGrant + GenerateDataKey can allow decrypting sensitive data or temporarily granting others decrypt capability.",
+    "remediation": "Restrict KMS grant creation; require key policies to restrict grants; monitor CreateGrant events and audit grants."
+  },
+  {
+    "id": "ORG-001",
+    "description": "Organizations read/list permissions present",
+    "detection": ["organizations:ListPolicies", "organizations:ListTargetsForPolicy", "organizations:DescribeOrganization", "organizations:ListRoots"],
+    "severity": 6,
+    "impact": "Allows enumeration of Organization structure and policies (useful for planning attacks or identifying accounts with broad privileges).",
+    "remediation": "Limit Organizations read access to administrators and security teams only."
+  },
+  {
+    "id": "SSM-002",
+    "description": "SSM GUI connect or ssm-guiconnect permissions detected",
+    "detection": ["ssm-guiconnect:StartConnection", "ssm-guiconnect:GetConnection", "ssm-guiconnect:CancelConnection"],
+    "severity": 7,
+    "impact": "GUI session features can be used to initiate remote sessions to instances; ensure these are restricted and monitored.",
+    "remediation": "Restrict GUI connect permissions to trusted staff and enable recording/monitoring."
+  }
+]
